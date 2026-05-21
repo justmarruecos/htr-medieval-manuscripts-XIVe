@@ -1,0 +1,20 @@
+# HTR et Deep Learning
+kraken
+transformers
+peft
+segmentation-models-pytorch
+
+# Manipulation de données et datasets
+datasets
+jsonschema
+
+# Computer Vision et Prétraitement
+opencv-python
+scikit-image
+
+# Métriques
+editdistance
+
+# Qualité et tests
+pytest
+jupyterlab
