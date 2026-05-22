@@ -12,6 +12,9 @@ dataset_nlp/images/
 # Ignorer les dossiers de travail de Computer Vision
 dataset_nlp/raw_pages/
 dataset_nlp/processed_pages/
+dataset_nlp/xml_cremma/
+dataset_nlp/xml_endp/
+
 
 # Distribution / packaging
 .Python
