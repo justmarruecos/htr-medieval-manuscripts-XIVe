@@ -6,6 +6,13 @@ __pycache__/
 # C extensions
 *.so
 
+# Ignorer les images du dataset lourd
+dataset_nlp/images/
+
+# Ignorer les dossiers de travail de Computer Vision
+dataset_nlp/raw_pages/
+dataset_nlp/processed_pages/
+
 # Distribution / packaging
 .Python
 build/
