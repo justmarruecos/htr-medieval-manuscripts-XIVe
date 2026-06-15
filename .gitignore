@@ -216,3 +216,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+dataset_nlp/images/
+dataset_nlp/binary_data/
+dataset_nlp/xml_cremma/
+dataset_nlp/xml_endp/
+dataset_nlp/xml_final/
+dataset_nlp/raw_pages/
+dataset_nlp/processed_pages/
+models/
