@@ -224,3 +224,5 @@ dataset_nlp/xml_final/
 dataset_nlp/raw_pages/
 dataset_nlp/processed_pages/
 models/
+dataset_nlp/raw_himanis/
+dataset_nlp/images_himanis/

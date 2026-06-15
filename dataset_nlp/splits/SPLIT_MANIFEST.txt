@@ -1,0 +1,6 @@
+Seeds: gss1=47, gss2=57
+Méthode: GroupShuffleSplit (groupe=shelfmark), 2 passes
+
+train.csv : 4b30cdb9aece87cac60d835986e0e5bfa331c8c47b1ccd72d473796d882325e3
+val.csv : 592f2e69fb5df7ecb5f7225d012352c32abee860ac13a276cd8bd2159045668e
+test.csv : 3df155b380d8316c29b0f758192fd71dcb9e6f6620e42c090d9f4331cf0a6f08
