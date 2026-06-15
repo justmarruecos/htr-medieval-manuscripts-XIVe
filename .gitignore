@@ -226,3 +226,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+dataset_nlp/binary_data/
+dataset_nlp/xml_final/
+dataset_nlp/raw_himanis/
+dataset_nlp/images_himanis/
+models/
