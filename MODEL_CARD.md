@@ -39,15 +39,16 @@
 | val_metric | 0.2402 |
 | Arrêt | epoch 16 |
 
-### Run v2 (lrate=1e-4) — en cours
+### Run v2 (lrate=1e-4) — TERMINÉ
 | Paramètre | Valeur |
 |-----------|--------|
 | Learning rate | 1e-4 |
 | Batch size | 8 |
 | Optimizer | AdamW |
-| Early stopping | patience=5 |
-| Meilleur epoch | à compléter |
-| val_metric | à compléter |
+| Early stopping | patience=5 (arrêt manuel au plateau) |
+| Meilleur epoch | 18 |
+| val_metric | 0.7898 |
+| Arrêt | epoch 19 (plateau détecté) |
 
 ## Performances
 
@@ -59,11 +60,11 @@
 | Lignes IoU > 0.75 | 0/40 |
 
 ### Reconnaissance HTR
-| Modèle | val_accuracy |
-|--------|-------------|
-| cremma-medieval (baseline zéro-shot) | à évaluer |
-| Fine-tuné lrate=1e-3 (v1) | 0.2402 |
-| Fine-tuné lrate=1e-4 (v2) | à compléter |
+| Modèle | val_metric (accuracy caractère) |
+|--------|--------------------------------|
+| cremma-medieval (baseline zéro-shot) | à évaluer (prochaine étape) |
+| Kraken fine-tuné lrate=1e-3 (v1) | 0.2402 (epoch 6, early stopping epoch 16) |
+| Kraken fine-tuné lrate=1e-4 (v2) | **0.7898** (epoch 18, arrêt manuel) |
 
 ## Utilisations prévues
 

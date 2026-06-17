@@ -122,8 +122,21 @@
       "base": "cremma-medieval.mlmodel",
       "lrate": 0.0001,
       "batch_size": 8,
-      "statut": "en_cours",
-      "checkpoint": "models/finetune_cremma_v2/"
+      "statut": "termine",
+      "checkpoint": "models/finetune_cremma_v2/model-epoch=18-val_metric=0.7898.ckpt",
+      "meilleur_epoch": 18,
+      "val_metric": 0.7898,
+      "arret": "manuel au plateau epoch 19",
+      "progression": {
+        "epoch_0": 0.1531,
+        "epoch_1": 0.5531,
+        "epoch_2": 0.6349,
+        "epoch_6": 0.7414,
+        "epoch_7": 0.7576,
+        "epoch_12": 0.7832,
+        "epoch_15": 0.788,
+        "epoch_18": 0.7898
+      }
     }
   ],
   "tests": {
