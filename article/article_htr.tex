@@ -238,6 +238,44 @@ IC 95\% TrOCR & [14,0\%, 16,6\%] \\
 
 Les intervalles ne se chevauchent pas~: la supériorité de Kraken est statistiquement significative.
 
+\subsection{Performance sur texte non vu}
+
+Le CER le plus pertinent pour l'évaluation est celui mesuré sur un manuscrit complet jamais vu à l'entraînement (split par manuscrit, pas par ligne)~:
+
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+\item \textbf{Kraken fine-tuné}~: CER = 15,2\% sur manuscrit non vu (vs 6,0\% par ligne)
+\item \textbf{TrOCR + LoRA}~: CER = 33,0\% sur manuscrit non vu (vs 15,3\% par ligne)
+\end{itemize}
+
+\noindent Ce résultat intègre les erreurs cumulées de segmentation et de reconnaissance, et reflète la performance réelle en conditions d'utilisation. Le modèle est disponible sur Hugging Face~: \url{https://huggingface.co/lapislazuli666/kraken-htr-medieval-french}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{fig_prediction_examples.png}
+\caption{Exemples de transcription automatique par Kraken fine-tuné sur un manuscrit BnF du XIV\textsuperscript{e} siècle --- page non vue à l'entraînement. CER = 15,2\% au niveau manuscrit.}
+\label{fig:predictions}
+\end{figure}
+
+\subsection{Volet~2~: Résultats NLP}
+
+\subsection{Segmentation}
+
+\begin{table}[H]
+\centering
+\caption{Évaluation de la segmentation (Kraken BLLA, zéro-shot)}
+\label{tab:iou}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Métrique} & \textbf{Valeur} & \textbf{Seuil validation} \\
+\midrule
+IoU moyen & 0,604 & $>$ 0,75 \\
+IoU médian & 0,614 & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent L'IoU est en dessous du seuil de validation car le modèle BLLA est utilisé en zéro-shot. Malgré cela, la segmentation produit des lignes exploitables pour la transcription (le CER final de 15,2\% intègre ces erreurs).
+
 \subsection{Volet~2~: Résultats NLP}
 
 \subsubsection{Expansion des abréviations}
@@ -307,12 +345,34 @@ Sur le corpus CATMuS+HIMANIS, le choix du learning rate s'est avéré critique~:
 \subsection{Limitations et perspectives}
 
 \begin{itemize}[leftmargin=*, itemsep=2pt]
+\item \textbf{Segmentation IoU} (0,604)~: en dessous du seuil de validation (0,75). Kraken BLLA est utilisé en zéro-shot sans fine-tuning au corpus. Le CER de 15,2\% sur manuscrit non vu intègre déjà les erreurs de segmentation. Un fine-tuning dédié du modèle de segmentation améliorerait significativement l'IoU.
 \item CREMMA sur-représente les textes littéraires soignés~; les registres administratifs (cursiva rapide) restent un défi
 \item Augmenter le rang LoRA ($r=16$, $r=32$) et cibler plus de modules améliorerait TrOCR
 \item Une stratégie de vote Kraken/TrOCR exploiterait la complémentarité des erreurs
 \item Le module NER nécessite un fine-tuning sur des entités médiévales spécifiques
 \item L'expansion des abréviations pourrait être améliorée par un modèle seq2seq neuronal (T5/mBART)
 \end{itemize}
+
+\subsection{Intégrité des données et reproductibilité}
+
+Les splits sont scellés dès le premier jour. Leurs hachages SHA-256 garantissent la non-contamination~:
+
+\begin{table}[H]
+\centering
+\caption{Hachages SHA-256 des splits (non-contamination)}
+\label{tab:sha256}
+\begin{tabular}{@{}lrl@{}}
+\toprule
+\textbf{Split} & \textbf{Lignes} & \textbf{SHA-256 (tronqué)} \\
+\midrule
+\texttt{train.csv} & 23\,444 & \texttt{4b30cdb9aece87ca...} \\
+\texttt{val.csv} & 5\,954 & \texttt{592f2e69fb5df7ec...} \\
+\texttt{test.csv} & 4\,112 & \texttt{3df155b380d8316c...} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Le test set n'a jamais été consulté pendant le développement. Les hyperparamètres sont sélectionnés exclusivement sur la validation.
 
 % ============================================================
 \section{Conclusion}
@@ -327,6 +387,25 @@ Ce projet démontre qu'un pipeline HTR+NLP end-to-end permet d'exploiter automat
 \end{enumerate}
 
 \textbf{Lien Volet~1 $\rightarrow$ Volet~2~:} Les transcriptions HTR alimentent directement l'analyse NLP. La qualité du CER (6\%) garantit que les erreurs résiduelles n'impactent pas significativement l'extraction d'entités et la modélisation thématique.
+
+\subsection{Data contract et gestion de l'incertitude}
+
+Le pipeline produit un jeu de données JSON conforme au contrat de données défini en section~4.4 du cours. Chaque ligne transcrite inclut~:
+\begin{itemize}[leftmargin=*, itemsep=1pt]
+\item \texttt{transcription}~: texte prédit
+\item \texttt{confidence}~: score de confiance calibré $\in [0,1]$
+\item \texttt{needs\_review}~: flag booléen (confiance $< 0,6$ ou longueur $< 3$ caractères)
+\item \texttt{segmentation\_ref}~: lien vers le fichier PAGE~XML correspondant
+\end{itemize}
+
+\noindent\textbf{Taux \texttt{needs\_review}~:} 18,2\% des 25\,219 lignes (seuil d'excellence $<$~20\% atteint). Confiance moyenne~: 0,80.
+
+\subsection{Modèle publié}
+
+Le meilleur modèle HTR est disponible publiquement sur Hugging Face~:\\
+\url{https://huggingface.co/lapislazuli666/kraken-htr-medieval-french}
+
+\noindent Ce dépôt inclut le checkpoint \texttt{kraken\_final\_best.mlmodel} et une \textit{model card} détaillée (architecture, données, performances, limitations).
 
 \vspace{0.5cm}
 \noindent\textbf{Code source~:} \url{https://github.com/justmarruecos/htr-medieval-manuscripts-XIVe}\\
