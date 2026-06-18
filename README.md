@@ -1,7 +1,12 @@
 # HTR Medieval Manuscripts XIVe-XVe
 
-Pipeline complet de reconnaissance de texte manuscrit (HTR) sur des manuscrits
-médiévaux français des XIVe et XVe siècles. Projet MD5 2026 — Master Data/IA, HETIC.
+Pipeline complet HTR + NLP sur manuscrits médiévaux français des XIVe-XVe siècles.  
+Projet MD5 2026 — Master Data/IA, HETIC.
+
+**Équipe** :   
+**Version** : `v1.0.0` — Branches : `main` ✅
+
+---
 
 ## Structure du projet
 
@@ -9,55 +14,77 @@ htr-medieval-manuscripts-XIVe/
 
 ├── dataset_nlp/
 
-│   ├── catmus_french_14_15_clean.csv   # CATMuS filtré (25 812 lignes)
-
-│   ├── himanis_clean.csv               # HIMANIS-Guérin extrait (7 698 lignes)
-
-│   ├── corpus_final_clean.csv          # Corpus unifié (33 510 lignes)
-
 │   ├── splits/
 
-│   │   ├── train.csv                   # 23 444 lignes
+│   │   ├── train.csv                      # 23 444 lignes (SCELLÉ)
 
-│   │   ├── val.csv                     # 5 954 lignes
+│   │   ├── val.csv                        # 5 954 lignes  (SCELLÉ)
 
-│   │   └── test.csv                    # 4 112 lignes (SCELLÉ)
+│   │   └── test.csv                       # 4 112 lignes  (SCELLÉ)
 
-│   └── binary_data/                    # Fichiers Arrow pour ketos train
+│   └── SPLIT_MANIFEST.txt
 
 ├── experiments/
 
-│   ├── 01b_corpus_catmus_fix.ipynb     # Reconstruction mapping CATMuS
+│   ├── 01b_corpus_catmus_fix.ipynb
 
-│   ├── 01c_corpus_himanis_extract.ipynb # Extraction PAGE-XML HIMANIS
+│   ├── 01c_corpus_himanis_extract.ipynb
 
-│   ├── 01d_corpus_merge_split.ipynb    # Fusion + split 70/15/15
+│   ├── 01d_corpus_merge_split.ipynb
 
-│   ├── 02b_test_preprocessing.ipynb    # Validation prétraitement + IoU
+│   ├── 02b_test_preprocessing.ipynb
 
-│   ├── 03b_compile_ketos.ipynb         # Compilation Arrow + entraînement
+│   ├── 03b_compile_ketos.ipynb
 
-│   └── journal.jsonl                   # Journal des expériences
+│   ├── 04_nlp_normalisation.ipynb
 
-├── segmentations/                      # Export PAGE-XML Kraken BLLA
+│   ├── 05_nlp_topic_modeling.ipynb
+
+│   └── journal.jsonl                      # 10 entrées
+
+├── segmentations/                         # Export PAGE-XML Kraken BLLA
 
 ├── src/
 
-│   └── preprocessing.py               # Fonctions prétraitement (deskew/CLAHE/Sauvola)
+│   ├── preprocessing.py                   # deskew + CLAHE + Sauvola
+
+│   ├── normalisation.py                   # Normalisation orthographique moyen français
+
+│   ├── ner.py                             # NERPipeline (CamemBERT zéro-shot)
+
+│   ├── api.py                             # FastAPI /analyze + /health
+
+│   └── tei_export.py                      # Export TEI-XML
 
 ├── tests/
 
-│   └── test_preprocessing.py          # 16 tests pytest (tous PASSED)
+│   ├── test_preprocessing.py              # 16 tests
+
+│   ├── test_normalisation.py              # 22 tests
+
+│   └── test_ner.py                        # 15 tests — 53/53 PASSED total
 
 ├── models/
 
-│   └── finetune_cremma_v2/            # Checkpoints fine-tuning (lrate=1e-4)
+│   └── finetune_cremma_v2/                # Checkpoint epoch 18 (val_metric=0.7898)
 
-├── DATA_SOURCES.md                    # Sources, licences, répartition
+├── CONVENTIONS_TRANSCRIPTION.md
 
-├── CONVENTIONS_TRANSCRIPTION.md       # Conventions transcription + prétraitement
+├── CONVENTIONS_NLP.md
 
-└── MODEL_CARD.md                      # Description du modèle final
+├── DATA_SOURCES.md
+
+├── MODEL_CARD.md
+
+├── data_contract.json
+
+├── Dockerfile
+
+├── docker-compose.yml
+
+└── requirements.txt                       # 205 dépendances figées
+
+---
 
 ## Reproduire les résultats
 
@@ -72,14 +99,13 @@ pip install -r requirements.txt
 
 ### Données
 
-Télécharger HIMANIS-Guérin depuis Zenodo (DOI: 10.5281/zenodo.5535306) :
-```bash
-# Placer le fichier Guerin(2).zip dans dataset_nlp/raw_himanis/guerin2/
-# puis extraire
-```
-
 CATMuS Medieval est téléchargé automatiquement via HuggingFace dans
-`01b_corpus_catmus_fix.ipynb`.
+`experiments/01b_corpus_catmus_fix.ipynb`.
+
+HIMANIS-Guérin (DOI: 10.5281/zenodo.5535306) :
+```bash
+# Placer Guerin(2).zip dans dataset_nlp/raw_himanis/guerin2/ puis extraire
+```
 
 ### Reconstruction du corpus
 
@@ -93,68 +119,129 @@ jupyter nbconvert --to notebook --execute experiments/01d_corpus_merge_split.ipy
 
 **SHA-256 des splits** :
 - `train.csv` : `4b30cdb9aece87cac60d835986e0e5bfa331c8c47b1ccd72d473796d882325e3`
-- `val.csv` : `592f2e69fb5df7ecb5f7225d012352c32abee860ac13a276cd8bd2159045668e`
-- `test.csv` : `3df155b380d8316c29b0f758192fd71dcb9e6f6620e42c090d9f4331cf0a6f08`
+- `val.csv`   : `592f2e69fb5df7ecb5f7225d012352c32abee860ac13a276cd8bd2159045668e`
+- `test.csv`  : `3df155b380d8316c29b0f758192fd71dcb9e6f6620e42c090d9f4331cf0a6f08`
 
 ### Tests
 
 ```bash
-python -m pytest tests/ -v
-# 16 passed in 1.20s
+pytest tests/ -v
+# 53 passed
 ```
 
-### Entraînement
+### Volet 1 — HTR
 
 ```bash
-# Voir experiments/03b_compile_ketos.ipynb pour le pipeline complet
-# Modèle de base : cremma-medieval.mlmodel
-# Learning rate : 1e-4 (fine-tuning)
-# Batch size : 8
-# Early stopping : patience=5
+# Prétraitement + segmentation
+jupyter nbconvert --to notebook --execute experiments/02b_test_preprocessing.ipynb
+
+# Fine-tuning Kraken (lrate=1e-4)
+jupyter nbconvert --to notebook --execute experiments/03b_compile_ketos.ipynb
+# Checkpoint : models/finetune_cremma_v2/model-epoch=18-val_metric=0.7898.ckpt
 ```
+
+### Volet 2 — NLP
+
+```bash
+# Normalisation orthographique
+jupyter nbconvert --to notebook --execute experiments/04_nlp_normalisation.ipynb
+
+# Topic modeling BERTopic
+jupyter nbconvert --to notebook --execute experiments/05_nlp_topic_modeling.ipynb
+
+# Lancer l'API
+uvicorn src.api:app --host 0.0.0.0 --port 8000
+
+# Ou via Docker
+docker-compose up --build
+```
+
+---
 
 ## Résultats
 
-### Segmentation (Kraken BLLA, zéro-shot)
+### Volet 1 — HTR
+
+#### Segmentation (Kraken BLLA, zéro-shot)
 
 | Métrique | Valeur |
-|----------|--------|
+|---|---|
 | IoU moyen | 0.604 |
 | IoU médian | 0.614 |
-| Lignes IoU > 0.75 | 0/40 |
-| Lignes IoU > 0.85 | 0/40 |
+| Page de référence | FRAN_0021_33533_A.jpg (HIMANIS JJ207) |
 
-Page de référence : `FRAN_0021_33533_A.jpg` (HIMANIS JJ207)
-Vérité-terrain : annotations Transkribus (40 lignes)
+#### Reconnaissance HTR
 
-### Reconnaissance HTR
+| Modèle | val_metric | Statut |
+|---|---|---|
+| cremma-medieval baseline zéro-shot | 0.3048 (CER=69.5%) | baseline |
+| Kraken fine-tuné lrate=1e-3 (v1) | 0.2402 | sous-optimal |
+| Kraken fine-tuné lrate=1e-4 (v2) | **0.7898** | ✅ seuil > 0.75 |
 
-| Modèle | val_metric (accuracy) |
-|--------|----------------------|
-| cremma-medieval (baseline zéro-shot) | 0.3048 (CER=69.5%, n=200 lignes val) |
-| Kraken fine-tuné lrate=1e-3 (v1) | 0.2402 (epoch 6, early stopping epoch 16) |
-| Kraken fine-tuné lrate=1e-4 (v2) | **0.7898** (epoch 18, arrêt manuel) |
+**Delta** : +48.5 points accuracy (0.305 → 0.790)
 
-**Delta fine-tuning** : +48.5 points d'accuracy (0.305 → 0.790)
+### Volet 2 — NLP
+
+#### Normalisation orthographique
+
+| Métrique | Valeur | Seuil | Statut |
+|---|---|---|---|
+| CER modification | 2.51% | < 10% | ✅ VALIDE |
+| Lignes modifiées | 122/200 (61%) | — | — |
+| Tests pytest | 22/22 | — | ✅ |
+
+#### NER zéro-shot (CamemBERT)
+
+| Métrique | Valeur |
+|---|---|
+| Entités détectées (200 lignes val) | 215 |
+| Distribution | PER=143, LOC=54, MISC=14, ORG=4 |
+| Score moyen | 0.880 |
+| Précision estimée globale | ~50% |
+| Statut | Exploratoire — fine-tuning requis pour F1 > 0.65 |
+
+#### Topic Modeling (BERTopic)
+
+| Topic | Label | Docs |
+|---|---|---|
+| 0 | Littérature courtoise / récits chevaleresques | 11 |
+| 1 | Actes royaux / registres de chancellerie | 7 |
+| 2 | Textes hagiographiques / religieux | 6 |
+| 3 | Chroniques / récits historiques | 6 |
+| 4 | Textes moraux / didactiques | 4 |
+
+Cible ≥ 3 topics cohérents : ✅ **5 topics**
+
+---
+
+## API
+
+```bash
+# Health check
+curl http://localhost:8000/health
+
+# Analyser un texte
+curl -X POST http://localhost:8000/analyze \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Jehan Rousseau demeure a Paris"}'
+```
+
+---
 
 ## Notes techniques
 
 ### Bug Kraken 7.0.2
-
-Le CLI `ketos train -f binary` ne transmet pas `binary_dataset_split=True`
-à `ArrowIPCRecognitionDataset`, rendant les splits intégrés aux fichiers
-`.arrow` inopérants. Contournement : injection directe des datasets via
-l'API Python (`VGSLRecognitionDataModule.train_set`/`val_set`).
+Le CLI `ketos train -f binary` ne transmet pas `binary_dataset_split=True`.
+Contournement : injection directe via API Python (`train_set`/`val_set`).
 
 ### Tridis Medieval EarlyModern
+Fichier 0 octet — baseline zéro-shot réalisée avec `cremma-medieval.mlmodel`.
 
-Le fichier `Tridis_Medieval_EarlyModern.mlmodel` présent dans le repo
-est un fichier vide (0 octets) — le téléchargement a échoué silencieusement.
-La baseline zéro-shot est donc évaluée avec `cremma-medieval.mlmodel`.
+---
 
 ## Licences corpus
 
 | Corpus | Licence |
-|--------|---------|
+|---|---|
 | CATMuS Medieval | CC-BY 4.0 |
 | HIMANIS-Guérin | CC-BY 4.0 |
