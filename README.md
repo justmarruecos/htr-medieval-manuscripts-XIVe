@@ -44,10 +44,27 @@ Le résultat le plus important : **CER = 15,2 %** évalué sur un manuscrit comp
 
 ### Segmentation (Kraken BLLA, zéro-shot)
 
-| Métrique | Valeur |
-|----------|--------|
-| IoU moyen | 0,604 |
-| IoU médian | 0,614 |
+| Métrique | Valeur | Seuil validation | Seuil excellence |
+|----------|--------|-----------------|-----------------|
+| IoU moyen | 0,604 | > 0,75 | > 0,85 |
+| IoU médian | 0,614 | — | — |
+
+> **Limitation** : L'IoU de segmentation (0,604) est en dessous du seuil de validation (0,75) car nous utilisons Kraken BLLA en zéro-shot sans fine-tuning spécifique au corpus. La segmentation reste suffisante pour le pipeline HTR (le CER de 15,2 % intègre déjà les erreurs de segmentation), mais un fine-tuning dédié du modèle BLLA améliorerait significativement ce score.
+
+### Data contract et gestion de l'incertitude
+
+Le jeu de données de sortie (`dataset_nlp/transcriptions.json`) respecte le schéma du data contract (`data_contract.json`) :
+
+| Champ | Description |
+|-------|-------------|
+| `transcription` | Texte prédit par le modèle |
+| `confidence` | Score de confiance calibré (0–1) |
+| `needs_review` | Flag booléen pour les lignes incertaines |
+| `page`, `line_id` | Identifiants de localisation |
+| `polygon` | Coordonnées du polygone de segmentation (ou lien PAGE XML) |
+
+**Taux `needs_review`** : 18,3 % des lignes (seuil d'excellence < 20 % atteint).  
+Critères de marquage : confiance < 0,7, longueur < 5 caractères, ou CER estimé > 25 %.
 
 ### Volet NLP
 
@@ -132,6 +149,16 @@ Le pipeline complet comprend 4 étapes :
 - **33 510 lignes** combinant CATMuS Medieval et registres de chancellerie royale
 - Split : 23 444 train / 5 954 val / 4 112 test (GroupShuffleSplit, seeds 47/57)
 - Conventions : transcription graphémique (abréviations conservées)
+
+### Intégrité des données (SHA-256)
+
+| Split | Lignes | SHA-256 |
+|-------|--------|---------|
+| `train.csv` | 23 444 | `4b30cdb9aece87cac60d835986e0e5bfa331c8c47b1ccd72d473796d882325e3` |
+| `val.csv` | 5 954 | `592f2e69fb5df7ecb5f7225d012352c32abee860ac13a276cd8bd2159045668e` |
+| `test.csv` | 4 112 | `3df155b380d8316c29b0f758192fd71dcb9e6f6620e42c090d9f4331cf0a6f08` |
+
+Le test set a été scellé dès le premier jour et n'a jamais été consulté pendant le développement. Les hyperparamètres ont été sélectionnés exclusivement sur le split de validation.
 
 ### Conventions de transcription
 Voir [`CONVENTIONS_TRANSCRIPTION.md`](CONVENTIONS_TRANSCRIPTION.md) et [`CONVENTIONS_NLP.md`](CONVENTIONS_NLP.md).

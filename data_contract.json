@@ -142,7 +142,37 @@
   "tests": {
     "framework": "pytest",
     "fichier": "tests/test_preprocessing.py",
-    "nb_tests": 16,
-    "resultat": "16 passed in 1.20s"
+    "nb_tests": 53,
+    "resultat": "53 passed",
+    "fichiers": [
+      "tests/test_preprocessing.py",
+      "tests/test_normalisation.py",
+      "tests/test_ner.py",
+      "tests/test_output.py",
+      "tests/test_utils.py"
+    ]
+  },
+  "output": {
+    "fichier": "dataset_nlp/transcriptions.json",
+    "format": "JSON array",
+    "lignes_totales": 25219,
+    "pages": 227,
+    "schema_ligne": {
+      "page": "str — identifiant de la page source",
+      "line_id": "str — identifiant unique (page_L00000)",
+      "transcription": "str — texte prédit par le modèle",
+      "confidence": "float [0,1] — score de confiance calibré",
+      "needs_review": "bool — true si la ligne nécessite une vérification humaine",
+      "segmentation_ref": "str — chemin vers le fichier PAGE XML"
+    },
+    "needs_review": {
+      "taux": "18.2%",
+      "seuil_excellence": "< 20%",
+      "criteres": [
+        "confidence < 0.6",
+        "longueur transcription < 3 caractères"
+      ]
+    },
+    "confiance_moyenne": 0.8
   }
 }
