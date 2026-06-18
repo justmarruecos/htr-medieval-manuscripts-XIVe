@@ -1,0 +1,148 @@
+{
+  "version": "1.0",
+  "date": "2026-06-17",
+  "projet": "HTR Medieval Manuscripts XIVe-XVe — Projet MD5 2026, HETIC",
+  "corpus": {
+    "total_lignes": 33510,
+    "sources": [
+      {
+        "nom": "CATMuS Medieval",
+        "url": "https://huggingface.co/datasets/CATMuS/medieval",
+        "licence": "CC-BY 4.0",
+        "lignes": 25812,
+        "filtre": "langue=French, siecle in [14, 15]",
+        "groupes_manuscrits": 38
+      },
+      {
+        "nom": "HIMANIS-Guerin",
+        "doi": "10.5281/zenodo.5535306",
+        "licence": "CC-BY 4.0",
+        "lignes": 7698,
+        "registres": [
+          "JJ207",
+          "JJ210"
+        ],
+        "periode": "1441-1502",
+        "groupes_manuscrits": 2
+      }
+    ],
+    "sources_ecartees": [
+      {
+        "nom": "e-NDP",
+        "raison": "licence CC-BY-NC-SA non conforme"
+      },
+      {
+        "nom": "CREMMA-BnF-BS4",
+        "raison": "doublon CATMuS (2615/2956 lignes)"
+      }
+    ],
+    "distribution_siecles": {
+      "XIVe": {
+        "lignes": 9339,
+        "pct": 27.9
+      },
+      "XVe": {
+        "lignes": 24171,
+        "pct": 72.1
+      }
+    }
+  },
+  "splits": {
+    "methode": "GroupShuffleSplit x2 (groupe=shelfmark)",
+    "seeds": {
+      "gss1": 47,
+      "gss2": 57
+    },
+    "train": {
+      "lignes": 23444,
+      "pct": 70.0,
+      "groupes": 28,
+      "sha256": "4b30cdb9aece87cac60d835986e0e5bfa331c8c47b1ccd72d473796d882325e3"
+    },
+    "val": {
+      "lignes": 5954,
+      "pct": 17.8,
+      "groupes": 6,
+      "sha256": "592f2e69fb5df7ecb5f7225d012352c32abee860ac13a276cd8bd2159045668e"
+    },
+    "test": {
+      "lignes": 4112,
+      "pct": 12.3,
+      "groupes": 6,
+      "sha256": "3df155b380d8316c29b0f758192fd71dcb9e6f6620e42c090d9f4331cf0a6f08",
+      "statut": "SCELLE - ne pas inspecter avant evaluation finale"
+    }
+  },
+  "preprocessing": {
+    "ordre": [
+      "deskew",
+      "CLAHE",
+      "Sauvola"
+    ],
+    "deskew": {
+      "methode": "cv2.minAreaRect",
+      "angle_max_deg": 45
+    },
+    "clahe": {
+      "clip_limit": 2.0,
+      "tile_size": [
+        8,
+        8
+      ]
+    },
+    "sauvola": {
+      "window_size": 25,
+      "k_cremma": 0.1,
+      "k_himanis": 0.2
+    }
+  },
+  "segmentation": {
+    "modele": "Kraken BLLA (segment -bl, zero-shot)",
+    "page_reference": "FRAN_0021_33533_A.jpg",
+    "verite_terrain": "Transkribus (40 lignes annotees)",
+    "iou_moyen": 0.604,
+    "iou_median": 0.614,
+    "lignes_iou_gt_075": 0,
+    "lignes_iou_gt_085": 0,
+    "export_pagexml": "segmentations/FRAN_0021_33533_A.xml"
+  },
+  "modeles_htr": [
+    {
+      "id": "kraken_cremma_v1",
+      "base": "cremma-medieval.mlmodel",
+      "lrate": 0.001,
+      "batch_size": 8,
+      "meilleur_epoch": 6,
+      "val_metric": 0.2402,
+      "statut": "termine",
+      "checkpoint": "models/finetune_cremma_v1/model-epoch=06-val_metric=0.2402.ckpt"
+    },
+    {
+      "id": "kraken_cremma_v2",
+      "base": "cremma-medieval.mlmodel",
+      "lrate": 0.0001,
+      "batch_size": 8,
+      "statut": "termine",
+      "checkpoint": "models/finetune_cremma_v2/model-epoch=18-val_metric=0.7898.ckpt",
+      "meilleur_epoch": 18,
+      "val_metric": 0.7898,
+      "arret": "manuel au plateau epoch 19",
+      "progression": {
+        "epoch_0": 0.1531,
+        "epoch_1": 0.5531,
+        "epoch_2": 0.6349,
+        "epoch_6": 0.7414,
+        "epoch_7": 0.7576,
+        "epoch_12": 0.7832,
+        "epoch_15": 0.788,
+        "epoch_18": 0.7898
+      }
+    }
+  ],
+  "tests": {
+    "framework": "pytest",
+    "fichier": "tests/test_preprocessing.py",
+    "nb_tests": 16,
+    "resultat": "16 passed in 1.20s"
+  }
+}
