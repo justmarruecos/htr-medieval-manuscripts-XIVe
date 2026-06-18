@@ -131,9 +131,11 @@ Vérité-terrain : annotations Transkribus (40 lignes)
 
 | Modèle | val_metric (accuracy) |
 |--------|----------------------|
-| cremma-medieval (zéro-shot) | à évaluer |
-| Kraken fine-tuné lrate=1e-3 | 0.2402 (epoch 6) |
-| Kraken fine-tuné lrate=1e-4 | en cours |
+| cremma-medieval (baseline zéro-shot) | 0.3048 (CER=69.5%, n=200 lignes val) |
+| Kraken fine-tuné lrate=1e-3 (v1) | 0.2402 (epoch 6, early stopping epoch 16) |
+| Kraken fine-tuné lrate=1e-4 (v2) | **0.7898** (epoch 18, arrêt manuel) |
+
+**Delta fine-tuning** : +48.5 points d'accuracy (0.305 → 0.790)
 
 ## Notes techniques
 
