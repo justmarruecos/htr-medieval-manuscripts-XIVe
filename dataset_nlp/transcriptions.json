@@ -1,0 +1,532 @@
+{
+  "metadata": {
+    "project": "HTR Medieval French — Volet 1",
+    "version": "1.0.0",
+    "created": "2026-06-17T23:40:08.407861",
+    "model_primary": "kraken_final_best.mlmodel",
+    "model_secondary": "trocr_lora_r8",
+    "corpus": "CREMMA Medieval",
+    "cer_primary": 0.06,
+    "cer_secondary": 0.153,
+    "evaluation_split": "line-level",
+    "n_lines_total": 15,
+    "transcription_conventions": "semi-diplomatic-catmus-v1",
+    "languages": [
+      "fro",
+      "frm"
+    ],
+    "sha256_train_set": "9471a08f6f8e354cd123c3c5b3a04cf59476d526b913318b809be040a09bf1e3"
+  },
+  "lines": [
+    {
+      "line_id": "bnf_fr_22549_p001_l001",
+      "image_source": "cremma_medieval/bnf_fr_22549",
+      "manuscript": "bnf_fr_22549",
+      "page": 1,
+      "line_number": 1,
+      "transcription": "freres et mes amis. Or veul",
+      "confidence": 0.897,
+      "needs_review": false,
+      "model": "kraken_final_best",
+      "language": "fro",
+      "polygon": {
+        "format": "PAGE_XML",
+        "coordinates": [
+          [
+            51,
+            75
+          ],
+          [
+            894,
+            75
+          ],
+          [
+            835,
+            115
+          ],
+          [
+            65,
+            115
+          ]
+        ],
+        "coordinate_system": "pixels_top_left_origin"
+      }
+    },
+    {
+      "line_id": "bnf_fr_22549_p001_l002",
+      "image_source": "cremma_medieval/bnf_fr_22549",
+      "manuscript": "bnf_fr_22549",
+      "page": 1,
+      "line_number": 2,
+      "transcription": "fait ascanus. Ainz a ce fait",
+      "confidence": 0.801,
+      "needs_review": false,
+      "model": "kraken_final_best",
+      "language": "fro",
+      "polygon": {
+        "format": "PAGE_XML",
+        "coordinates": [
+          [
+            97,
+            120
+          ],
+          [
+            813,
+            120
+          ],
+          [
+            886,
+            160
+          ],
+          [
+            97,
+            160
+          ]
+        ],
+        "coordinate_system": "pixels_top_left_origin"
+      }
+    },
+    {
+      "line_id": "pennsylvania_codex_909_p042_l001",
+      "image_source": "cremma_medieval/pennsylvania_codex_909",
+      "manuscript": "pennsylvania_codex_909",
+      "page": 42,
+      "line_number": 1,
+      "transcription": "Pour sollager noz fatigees nefz",
+      "confidence": 0.955,
+      "needs_review": false,
+      "model": "kraken_final_best",
+      "language": "fro",
+      "polygon": {
+        "format": "PAGE_XML",
+        "coordinates": [
+          [
+            55,
+            75
+          ],
+          [
+            875,
+            75
+          ],
+          [
+            854,
+            115
+          ],
+          [
+            52,
+            115
+          ]
+        ],
+        "coordinate_system": "pixels_top_left_origin"
+      }
+    },
+    {
+      "line_id": "bnf_fr_1728_p003_l005",
+      "image_source": "cremma_medieval/bnf_fr_1728",
+      "manuscript": "bnf_fr_1728",
+      "page": 3,
+      "line_number": 5,
+      "transcription": "lonc la pole",
+      "confidence": 0.757,
+      "needs_review": true,
+      "model": "kraken_final_best",
+      "language": "fro",
+      "polygon": {
+        "format": "PAGE_XML",
+        "coordinates": [
+          [
+            63,
+            255
+          ],
+          [
+            829,
+            255
+          ],
+          [
+            864,
+            295
+          ],
+          [
+            88,
+            295
+          ]
+        ],
+        "coordinate_system": "pixels_top_left_origin"
+      }
+    },
+    {
+      "line_id": "pennsylvania_codex_909_p042_l002",
+      "image_source": "cremma_medieval/pennsylvania_codex_909",
+      "manuscript": "pennsylvania_codex_909",
+      "page": 42,
+      "line_number": 2,
+      "transcription": "Sy feist yssir les ames qui estoyent",
+      "confidence": 0.756,
+      "needs_review": true,
+      "model": "kraken_final_best",
+      "language": "fro",
+      "polygon": {
+        "format": "PAGE_XML",
+        "coordinates": [
+          [
+            62,
+            120
+          ],
+          [
+            891,
+            120
+          ],
+          [
+            883,
+            160
+          ],
+          [
+            94,
+            160
+          ]
+        ],
+        "coordinate_system": "pixels_top_left_origin"
+      }
+    },
+    {
+      "line_id": "bnf_fr_412_p015_l008",
+      "image_source": "cremma_medieval/bnf_fr_412",
+      "manuscript": "bnf_fr_412",
+      "page": 15,
+      "line_number": 8,
+      "transcription": "e li rois fu molt liez de ceste",
+      "confidence": 0.875,
+      "needs_review": false,
+      "model": "kraken_final_best",
+      "language": "fro",
+      "polygon": {
+        "format": "PAGE_XML",
+        "coordinates": [
+          [
+            64,
+            390
+          ],
+          [
+            857,
+            390
+          ],
+          [
+            875,
+            430
+          ],
+          [
+            67,
+            430
+          ]
+        ],
+        "coordinate_system": "pixels_top_left_origin"
+      }
+    },
+    {
+      "line_id": "bnf_fr_412_p015_l009",
+      "image_source": "cremma_medieval/bnf_fr_412",
+      "manuscript": "bnf_fr_412",
+      "page": 15,
+      "line_number": 9,
+      "transcription": "novele. si comanda que len feist",
+      "confidence": 0.936,
+      "needs_review": false,
+      "model": "kraken_final_best",
+      "language": "fro",
+      "polygon": {
+        "format": "PAGE_XML",
+        "coordinates": [
+          [
+            50,
+            435
+          ],
+          [
+            897,
+            435
+          ],
+          [
+            820,
+            475
+          ],
+          [
+            94,
+            475
+          ]
+        ],
+        "coordinate_system": "pixels_top_left_origin"
+      }
+    },
+    {
+      "line_id": "bnf_fr_412_p015_l010",
+      "image_source": "cremma_medieval/bnf_fr_412",
+      "manuscript": "bnf_fr_412",
+      "page": 15,
+      "line_number": 10,
+      "transcription": "grant joie par tot le pais",
+      "confidence": 0.847,
+      "needs_review": false,
+      "model": "kraken_final_best",
+      "language": "fro",
+      "polygon": {
+        "format": "PAGE_XML",
+        "coordinates": [
+          [
+            67,
+            480
+          ],
+          [
+            819,
+            480
+          ],
+          [
+            827,
+            520
+          ],
+          [
+            98,
+            520
+          ]
+        ],
+        "coordinate_system": "pixels_top_left_origin"
+      }
+    },
+    {
+      "line_id": "bnf_fr_412_p015_l011",
+      "image_source": "cremma_medieval/bnf_fr_412",
+      "manuscript": "bnf_fr_412",
+      "page": 15,
+      "line_number": 11,
+      "transcription": "car il avoit molt desirre ceste",
+      "confidence": 0.827,
+      "needs_review": false,
+      "model": "kraken_final_best",
+      "language": "fro",
+      "polygon": {
+        "format": "PAGE_XML",
+        "coordinates": [
+          [
+            55,
+            525
+          ],
+          [
+            848,
+            525
+          ],
+          [
+            812,
+            565
+          ],
+          [
+            72,
+            565
+          ]
+        ],
+        "coordinate_system": "pixels_top_left_origin"
+      }
+    },
+    {
+      "line_id": "bnf_fr_412_p015_l012",
+      "image_source": "cremma_medieval/bnf_fr_412",
+      "manuscript": "bnf_fr_412",
+      "page": 15,
+      "line_number": 12,
+      "transcription": "chose. Et quant li messages",
+      "confidence": 0.945,
+      "needs_review": false,
+      "model": "kraken_final_best",
+      "language": "fro",
+      "polygon": {
+        "format": "PAGE_XML",
+        "coordinates": [
+          [
+            88,
+            570
+          ],
+          [
+            833,
+            570
+          ],
+          [
+            805,
+            610
+          ],
+          [
+            96,
+            610
+          ]
+        ],
+        "coordinate_system": "pixels_top_left_origin"
+      }
+    },
+    {
+      "line_id": "bodmer_168_p001_l001",
+      "image_source": "cremma_medieval/bodmer_168",
+      "manuscript": "bodmer_168",
+      "page": 1,
+      "line_number": 1,
+      "transcription": "En cel tens que li apostoiles",
+      "confidence": 0.856,
+      "needs_review": false,
+      "model": "kraken_final_best",
+      "language": "fro",
+      "polygon": {
+        "format": "PAGE_XML",
+        "coordinates": [
+          [
+            57,
+            75
+          ],
+          [
+            848,
+            75
+          ],
+          [
+            810,
+            115
+          ],
+          [
+            85,
+            115
+          ]
+        ],
+        "coordinate_system": "pixels_top_left_origin"
+      }
+    },
+    {
+      "line_id": "bodmer_168_p001_l002",
+      "image_source": "cremma_medieval/bodmer_168",
+      "manuscript": "bodmer_168",
+      "page": 1,
+      "line_number": 2,
+      "transcription": "de rome manda ses messages",
+      "confidence": 0.817,
+      "needs_review": false,
+      "model": "kraken_final_best",
+      "language": "fro",
+      "polygon": {
+        "format": "PAGE_XML",
+        "coordinates": [
+          [
+            90,
+            120
+          ],
+          [
+            879,
+            120
+          ],
+          [
+            846,
+            160
+          ],
+          [
+            86,
+            160
+          ]
+        ],
+        "coordinate_system": "pixels_top_left_origin"
+      }
+    },
+    {
+      "line_id": "bodmer_168_p001_l003",
+      "image_source": "cremma_medieval/bodmer_168",
+      "manuscript": "bodmer_168",
+      "page": 1,
+      "line_number": 3,
+      "transcription": "au roi de france por le secors",
+      "confidence": 0.794,
+      "needs_review": true,
+      "model": "kraken_final_best",
+      "language": "fro",
+      "polygon": {
+        "format": "PAGE_XML",
+        "coordinates": [
+          [
+            54,
+            165
+          ],
+          [
+            805,
+            165
+          ],
+          [
+            884,
+            205
+          ],
+          [
+            64,
+            205
+          ]
+        ],
+        "coordinate_system": "pixels_top_left_origin"
+      }
+    },
+    {
+      "line_id": "bodmer_168_p001_l004",
+      "image_source": "cremma_medieval/bodmer_168",
+      "manuscript": "bodmer_168",
+      "page": 1,
+      "line_number": 4,
+      "transcription": "de la terre doutre mer",
+      "confidence": 0.928,
+      "needs_review": false,
+      "model": "kraken_final_best",
+      "language": "fro",
+      "polygon": {
+        "format": "PAGE_XML",
+        "coordinates": [
+          [
+            55,
+            210
+          ],
+          [
+            829,
+            210
+          ],
+          [
+            812,
+            250
+          ],
+          [
+            74,
+            250
+          ]
+        ],
+        "coordinate_system": "pixels_top_left_origin"
+      }
+    },
+    {
+      "line_id": "bodmer_168_p001_l005",
+      "image_source": "cremma_medieval/bodmer_168",
+      "manuscript": "bodmer_168",
+      "page": 1,
+      "line_number": 5,
+      "transcription": "qui estoit en grant peril",
+      "confidence": 0.814,
+      "needs_review": false,
+      "model": "kraken_final_best",
+      "language": "fro",
+      "polygon": {
+        "format": "PAGE_XML",
+        "coordinates": [
+          [
+            90,
+            255
+          ],
+          [
+            846,
+            255
+          ],
+          [
+            820,
+            295
+          ],
+          [
+            73,
+            295
+          ]
+        ],
+        "coordinate_system": "pixels_top_left_origin"
+      }
+    }
+  ]
+}

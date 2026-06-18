@@ -1,24 +1,39 @@
 # Pipeline HTR pour Manuscrits Médiévaux Français (XIIIe–XVe siècle)
 
-> Reconnaissance automatique de texte manuscrit (HTR) et analyse NLP sur des manuscrits gothiques français — CER de **6,0 %** atteint (seuil d'excellence).
+> Reconnaissance automatique de texte manuscrit (HTR) et analyse NLP sur des manuscrits gothiques français — **CER de 15,2 % sur des manuscrits jamais vus** à l'entraînement.
 
 **Master Data & Intelligence Artificielle — Module Vision par Ordinateur**  
 **HETIC — Projet MD5, Juin 2026**
 
 ---
 
+## Modèle publié
+
+🤗 **Notre modèle est disponible sur Hugging Face** : [`lapislazuli666/kraken-htr-medieval-french`](https://huggingface.co/lapislazuli666/kraken-htr-medieval-french)
+
+```bash
+# Utilisation directe
+pip install kraken
+kraken -i manuscript.jpg output.txt segment -bl ocr -m kraken_final_best.mlmodel
+```
+
+---
+
 ## Résultats clés
 
-### Performance HTR
+### Performance sur texte non vu
 
-| Modèle | Corpus | CER (ligne) | CER (manuscrit) | Statut |
-|--------|--------|-------------|------------------|--------|
-| TrOCR Base (zero-shot) | CREMMA | 67,9 % | 67,9 % | Baseline |
-| Kraken cremma-medieval (zero-shot) | CATMuS+HIMANIS | 69,5 % | — | Baseline |
-| Kraken fine-tuné lrate=1e-4 (v2) | CATMuS+HIMANIS | — | val_metric 0.79 | ✅ Validation |
-| TrOCR + LoRA r=8 (fine-tuné) | CREMMA | **15,3 %** | 33,0 % | ✅ Validation |
-| Kraken fine-tuné v2 | CATMuS+HIMANIS | 21,0 % | — | ✅ Validation |
-| **Kraken fine-tuné (12 epochs)** | **CREMMA** | **6,0 %** | 15,2 % | 🏆 **Excellence** |
+Le résultat le plus important : **CER = 15,2 %** évalué sur un manuscrit complet jamais vu à l'entraînement (split par manuscrit, pas par ligne). Ce chiffre reflète la performance réelle du modèle en conditions d'utilisation.
+
+| Modèle | CER (lignes val) | CER (manuscrit non vu) | Statut |
+|--------|------------------|------------------------|--------|
+| TrOCR Base (zero-shot) | 67,9 % | 67,9 % | Baseline |
+| Kraken cremma-medieval (zero-shot) | 32,6 % | 32,6 % | Baseline |
+| TrOCR + LoRA r=8 (fine-tuné) | 15,3 % | 33,0 % | Validation |
+| Kraken fine-tuné v2 (CATMuS+HIMANIS) | 21,0 % | — | Validation |
+| **Kraken fine-tuné (12 epochs, CREMMA)** | **6,0 %** | **15,2 %** | **Excellence** |
+
+> **Pourquoi deux CER ?** Le CER par ligne (6,0 %) mesure la précision sur des lignes isolées du split de validation. Le CER sur manuscrit non vu (15,2 %) est plus exigeant : il évalue le modèle sur des pages entières d'un manuscrit absent du corpus d'entraînement — incluant les erreurs de segmentation, styles d'écriture nouveaux, et variabilité réelle.
 
 ### Test statistique
 
