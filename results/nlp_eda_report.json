@@ -1,0 +1,94 @@
+{
+  "source": "nlp_eda.py",
+  "kraken_analysis": {
+    "length_statistics": {
+      "total_lines": 25219,
+      "mean_length": 26.88,
+      "median_length": 30,
+      "min_length": 0,
+      "max_length": 113,
+      "quartiles": {
+        "q1": 14,
+        "median": 30,
+        "q3": 38
+      }
+    },
+    "abbreviation_statistics": {
+      "character_counts": {
+        "⁊": {
+          "count": 4054,
+          "description": "tironian et (et)"
+        },
+        "ꝯ": {
+          "count": 792,
+          "description": "con/com"
+        },
+        "ꝑ": {
+          "count": 1055,
+          "description": "par/per"
+        },
+        "ꝓ": {
+          "count": 82,
+          "description": "pro"
+        },
+        "÷": {
+          "count": 4,
+          "description": "est (signe diviseur)"
+        },
+        "ẽ": {
+          "count": 1207,
+          "description": "e tilde (en/em)"
+        },
+        "õ": {
+          "count": 983,
+          "description": "o tilde (on/om)"
+        },
+        "ĩ": {
+          "count": 224,
+          "description": "i tilde (in/im)"
+        },
+        "ũ": {
+          "count": 326,
+          "description": "u tilde (un/um)"
+        },
+        "ñ": {
+          "count": 207,
+          "description": "n tilde (nasalisation)"
+        },
+        "ã": {
+          "count": 560,
+          "description": "a tilde (an/am)"
+        },
+        "̃": {
+          "count": 934,
+          "description": "combining tilde (suscript)"
+        },
+        "q̃": {
+          "count": 598,
+          "description": "q tilde (que)"
+        }
+      },
+      "total_abbreviation_chars": 11026,
+      "lines_with_abbreviations": 7844,
+      "percentage_lines_with_abbreviations": 31.1
+    },
+    "unique_pages": 227
+  },
+  "nlp_analysis": {
+    "total_lines": 25219,
+    "confidence_distribution": {
+      "mean": 0.7994,
+      "median": 0.927,
+      "std_dev": 0.24,
+      "min": 0.1,
+      "max": 0.93,
+      "quartiles": {
+        "q1": 0.865,
+        "median": 0.927,
+        "q3": 0.93
+      }
+    },
+    "needs_review_count": 4587,
+    "needs_review_rate": 18.19
+  }
+}

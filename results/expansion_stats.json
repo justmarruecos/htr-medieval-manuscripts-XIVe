@@ -1,0 +1,11 @@
+{
+  "total_lines": 25219,
+  "lines_modified": 9528,
+  "modification_rate": 37.78,
+  "mean_cer_relative": 0.0585,
+  "total_chars_before": 677822,
+  "total_chars_after": 697100,
+  "char_increase": 19278,
+  "mlm_used": false,
+  "abbreviation_rules_count": 66
+}
