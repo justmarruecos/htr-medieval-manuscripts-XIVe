@@ -43,7 +43,7 @@ Nous présentons un pipeline end-to-end de traitement automatique de manuscrits 
 % ============================================================
 \section{Introduction}
 
-La numérisation massive des archives médiévales par des institutions comme la BnF (380\,000 manuscrits, 11 millions de documents en ligne via Gallica) ouvre des perspectives inédites pour la recherche historique. Cependant, une image n'est pas un texte~: la transcription manuelle par des paléographes ($\sim$50\,\euro/h) est prohibitivement coûteuse à l'échelle des collections patrimoniales.
+La numérisation massive des archives médiévales par des institutions comme la BnF (380\,000 manuscrits, 11 millions de documents en ligne via Gallica) ouvre des perspectives inédites pour la recherche historique. Cependant, une image n'est pas un texte~: la transcription manuelle par des paléographes ($\sim$50\,\texteuro/h) est prohibitivement coûteuse à l'échelle des collections patrimoniales.
 
 La reconnaissance automatique de texte manuscrit (HTR) vise à combler ce fossé. Les manuscrits médiévaux français présentent des défis spécifiques~:
 \begin{itemize}[leftmargin=*, itemsep=2pt]
@@ -278,31 +278,95 @@ IoU médian & 0,614 & --- \\
 
 \subsection{Volet~2~: Résultats NLP}
 
-\subsubsection{Expansion des abréviations}
+\subsubsection{Analyse exploratoire des transcriptions (EDA)}
 
-Le module d'expansion transforme les transcriptions graphémiques en texte normalisé. Approche hybride~: dictionnaire de 45 abréviations médiévales courantes + règles contextuelles.
+L'analyse exploratoire des 25\,219 lignes transcrites par le pipeline HTR révèle~:
 
 \begin{table}[H]
 \centering
-\caption{Exemples d'expansion des abréviations}
+\caption{Statistiques EDA du corpus transcrit}
+\label{tab:eda}
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{Métrique} & \textbf{Valeur} \\
+\midrule
+Lignes totales & 25\,219 \\
+Longueur moyenne / médiane & 26,9 / 30 caractères \\
+Lignes avec abréviations & 7\,844 (31,1\%) \\
+Caractères abréviatifs totaux & 11\,026 \\
+Score de confiance moyen & 0,80 \\
+Taux \texttt{needs\_review} & 18,2\% (seuil $<$~20\% atteint) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Les abréviations les plus fréquentes sont~: ⁊ (tironian \textit{et}, 4\,054), ẽ (tilde nasal, 1\,207), ꝑ (\textit{par/per}, 1\,055), õ (tilde nasal, 983), ꝯ (\textit{con/com}, 792). Ces chiffres justifient la priorité accordée à l'expansion des abréviations.
+
+\subsubsection{Expansion des abréviations --- Approche hybride}
+
+Nous implémentons un module d'expansion en deux étapes~:
+
+\textbf{Étape~1 --- Règles déterministes (66 règles)~:}
+\begin{itemize}[leftmargin=*, itemsep=1pt]
+\item Normalisation Unicode NFC
+\item Résolution des tildes combinantes (U+0303) en nasalisation (ẽ $\rightarrow$ en, õ $\rightarrow$ on)
+\item Table de 66 abréviations classées par longueur décroissante (éviter les substitutions partielles)
+\item Catégories~: signes tironiens (⁊$\rightarrow$et), lettres spéciales (ꝯ$\rightarrow$con, ꝑ$\rightarrow$par, ꝓ$\rightarrow$pro), contractions latines, terminaisons nasales
+\end{itemize}
+
+\textbf{Étape~2 --- Correction MLM (CamemBERT, optionnelle)~:}
+
+Pour les cas ambigus (ꝯ $\rightarrow$ con ou com~? ꝑ $\rightarrow$ par ou per~?), le mot expandu est masqué et CamemBERT (\texttt{camembert-base}) évalue la probabilité de chaque candidat en contexte. Le candidat maximisant $P(\text{token}|\text{contexte})$ est retenu.
+
+\begin{table}[H]
+\centering
+\caption{Exemples d'expansion (66 règles + MLM)}
 \label{tab:abbrev}
 \begin{tabular}{@{}lll@{}}
 \toprule
 \textbf{Entrée (graphémique)} & \textbf{Sortie (normalisée)} & \textbf{Règle} \\
 \midrule
-sr̄ & seigneur & Tilde nasal \\
-ꝯmanda & commanda & Signe tironien \\
-sõ & son & Tilde = n \\
-ꝑvost & prevost & p barré = par/per \\
+ꝯmanda & commanda & Signe tironien + MLM \\
+sẽssoit & senssoit & Tilde nasal \\
+q̃lle & quelle & q-tilde = que \\
+ꝑvost & parvost & p barré = par/per \\
+ẽtẽtinemẽt & ententinement & Triple tilde nasal \\
+cesse respõdit & cesse respondit & Tilde = n \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-CER de modification~: 2,51\% (les transformations sont conservatrices).
+\textbf{Résultats de l'expansion~:}
+
+\begin{table}[H]
+\centering
+\caption{Impact de l'expansion des abréviations}
+\label{tab:expansion_results}
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{Métrique} & \textbf{Valeur} \\
+\midrule
+Lignes modifiées & 60,7\% \\
+CER relatif (raw vs expandu) & 5,85\% \\
+Caractères ajoutés & $+$4\,200 \\
+Règles appliquées & 66 \\
+\midrule
+\textbf{Estimation CER si réentraînement} & \textbf{$-$2,3 pts} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Perspective~:} si le modèle HTR est réentraîné avec un \textit{ground truth} où les abréviations sont pré-expandues, nous estimons une réduction du CER de $\sim$2,3 points (de 15,2\% à $\sim$12,9\% sur manuscrit non vu). Cette hypothèse repose sur la récupération de 40\% du delta brut (estimation conservative). Ce réentraînement est planifié sur les 2 semaines post-soutenance.
+
+\subsubsection{Étiquetage morphosyntaxique (POS) et graphe d'entités}
+
+Le module POS utilise Stanza avec le modèle \texttt{fro} (Old French) pour l'étiquetage morphosyntaxique et la lemmatisation de 500 lignes. Les noms propres (PROPN) identifiés alimentent un graphe de co-occurrences (NetworkX)~: deux entités sont reliées si elles apparaissent sur la même page. Ce graphe, exporté au format GEXF, permet de visualiser les réseaux de personnages et de lieux dans le corpus.
+
+L'extraction de relations utilise des patterns lexico-syntaxiques~: \texttt{NOM\_PROPRE + verbe\_mouvement + LIEU} (ex.~: ``Ascanius ala a Rome'' $\rightarrow$ relation \textsc{personne, va\_à, lieu}).
 
 \subsubsection{Reconnaissance d'entités nommées (NER)}
 
-CamemBERT en zero-shot sur 200 lignes de validation~: 215 entités détectées (PER=143, LOC=54, MISC=14, ORG=4). Score moyen~: 0,88. Précision estimée~: $\sim$50\% (exploratoire, fine-tuning requis pour F1 $>$ 0,65).
+CamemBERT en zero-shot sur 200 lignes de validation~: 215 entités détectées (PER=143, LOC=54, MISC=14, ORG=4). Score moyen~: 0,88. Précision estimée~: $\sim$50\% (exploratoire). Le fine-tuning NER LoRA est \textbf{bloqué} car il nécessite des gold labels annotés manuellement sur du moyen français, qui n'existent pas actuellement.
 
 \subsubsection{Modélisation thématique (BERTopic)}
 
